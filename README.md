@@ -12,5 +12,5 @@ pip install -r requirements.txt
 ```
 5. Execute with 
 ```bash
-ppython starting.py
+python3 starting.py
 ```
