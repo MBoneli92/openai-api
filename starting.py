@@ -11,13 +11,24 @@ if api_key is None:
 client = openai.OpenAI(api_key=api_key)
 
 def generate_reply(messages, model="gpt-3.5-turbo", max_tokens=1000, temperature=0):
-    response = client.chat.completions.create(
+    response_stream = client.chat.completions.create(
     model=model,
     max_tokens=max_tokens,
     temperature=temperature,
-    messages=messages
+    messages=messages,
+    stream=True ##Prints the text word per word
     )
-    return response.choices[0].message.content
+    full_response = ""
+    print("🤖 Assistant:", end=" ", flush=True)
+
+    for chunk in response_stream:
+        if chunk.choices[0].delta.content:
+            content = chunk.choices[0].delta.content
+            print(content, end="", flush=True)
+            full_response += content
+
+    print()  # New line after stream ends
+    return full_response
 
 # Start conversation
 conversation = []
